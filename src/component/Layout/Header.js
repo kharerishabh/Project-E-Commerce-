@@ -1,8 +1,14 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useContext } from "react";
 import { Navbar } from "react-bootstrap";
 import "./Header.css";
+import CartContext from "../store/cart-context";
 
 const Header = (props) => {
+  const cartCtx = useContext(CartContext);
+
+   const noOfCartItem = cartCtx.quantity;
+   
+
   return (
     <Fragment>
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -39,10 +45,10 @@ const Header = (props) => {
             </li>
           </ul>
           <form className="form-inline">
-            <button
-              className="btn btn-outline-primary my-2 my-sm-0"
+            <button className="btn btn-outline-success my-2 my-sm-0"
+              style={{alignItems: 'center', paddingLeft: '-20%'}}
               type="submit" onClick={props.onShowCart}
-            >Cart</button>
+            >Cart <span>{noOfCartItem}</span></button>
           </form>
         </div>
       </nav>

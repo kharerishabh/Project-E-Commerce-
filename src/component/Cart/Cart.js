@@ -1,48 +1,34 @@
-import React from "react";
+import React, { useContext } from "react";
+import CartContext from "../store/cart-context";
 import Modal from "../UI/Modal";
 import classes from "./Cart.module.css";
+import CartItem from "./CartItem";
 
-const cartElements = [
-  {
-    id: 'm-1',
-    title: "Album 1",
-    price: 100,
-    imageUrl: "https://prasadyash2411.github.io/ecom-website/img/Album%201.png",
-    quantity: 2,
-  },
-  {
-    id: 'm-2',
-    title: "Album 2",
-    price: 50,
-    imageUrl: "https://prasadyash2411.github.io/ecom-website/img/Album%202.png",
-    quantity: 3,
-  },
-  {
-    id: 'm-3',
-    title: "Album 3",
-    price: 70,
-    imageUrl: "https://prasadyash2411.github.io/ecom-website/img/Album%203.png",
-    quantity: 1,
-  },
-];
 const Cart = (props) => {
+  const cartCtx = useContext(CartContext);
+  const cartItemRemoveHandler = (id) => {
+    cartCtx.removeItem(id);
+  };
   const Elements = (
     <ul className={classes["cart-ele"]}>
-      {cartElements.map((element) => (
-        <li key={element.id}>
-        <h2>{element.title}</h2>
-        <img src={element.imageUrl} alt='A Table'/>
-        <span><h6>$ {element.price}</h6></span>
-        <span>{element.quantity}</span>
-       </li>
+      {cartCtx.items.map((element) => (
+        <CartItem
+          key={Math.random().toString()}
+          item={element}
+          onRemove={cartItemRemoveHandler.bind(null, element.id)}
+        />
       ))}
     </ul>
   );
   return (
     <Modal onClose={props.onClose}>
       {Elements}
+      <span>Total Price</span>
       <div className={classes.actions}>
-        <button className={classes['button--alt']} onClick={props.onClose}>Remove</button>
+        <button className={classes["button--alt"]} onClick={props.onClose}>
+          Close
+        </button>
+        
       </div>
     </Modal>
   );

@@ -1,10 +1,13 @@
-import { Fragment, useState } from 'react';
+import { useState, useContext } from 'react';
 import Header from './component/Layout/Header';
 import AvailableProduct from './component/Products/AvailableProduct';
- import Cart from './component/Cart/Cart';
+import Cart from './component/Cart/Cart';
+import CartProvider from './component/store/CartProvider';
+import CartContext from './component/store/cart-context';
 
 
-const App = () => {
+const App = (props) => {
+  const cartCtx = useContext(CartContext)
   const [cartIsShown, setCartIsShown] = useState(false);
 
   const showCartHandler = (event) =>{
@@ -15,15 +18,24 @@ const App = () => {
   const hideCartHandler = () => {
     setCartIsShown(false);
   }
+  
+  const addToCartHAndler = () =>{
+    cartCtx.addItems({
+      id: props.id,
+      title: props.title,
+      price: props.price,
+      imageUrl: props.imageUrl
+    })
+  }
 
   return (
-    <Fragment>
+    <CartProvider>
       {cartIsShown && <Cart onClose={hideCartHandler}/>}
     <Header onShowCart={showCartHandler}/>
     <main>
-      <AvailableProduct/>
+      <AvailableProduct onAddToCart={addToCartHAndler}/>
     </main>
-    </Fragment>
+    </CartProvider>
   );
 }
 
