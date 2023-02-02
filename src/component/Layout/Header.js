@@ -2,6 +2,8 @@ import React, { Fragment, useContext } from "react";
 import { Navbar } from "react-bootstrap";
 import "./Header.css";
 import CartContext from "../store/cart-context";
+import { NavLink } from "react-router-dom";
+
 
 const Header = (props) => {
   const cartCtx = useContext(CartContext);
@@ -34,9 +36,9 @@ const Header = (props) => {
               </a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="/">
+              <NavLink to="/about" className="nav-link">
                 About
-              </a>
+              </NavLink>
             </li>
             <li className="nav-item">
               <a className="nav-link" href="/">

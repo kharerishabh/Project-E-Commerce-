@@ -4,6 +4,8 @@ import AvailableProduct from './component/Products/AvailableProduct';
 import Cart from './component/Cart/Cart';
 import CartProvider from './component/store/CartProvider';
 import CartContext from './component/store/cart-context';
+import { Route } from 'react-router-dom';
+import About from './component/Pages/About';
 
 
 const App = (props) => {
@@ -29,13 +31,18 @@ const App = (props) => {
   }
 
   return (
+    <>
     <CartProvider>
       {cartIsShown && <Cart onClose={hideCartHandler}/>}
-    <Header onShowCart={showCartHandler}/>
+     <Header onShowCart={showCartHandler}/>
     <main>
+    <Route exact path="/about">
+      <About/>
+      </Route> 
       <AvailableProduct onAddToCart={addToCartHAndler}/>
     </main>
-    </CartProvider>
+    </CartProvider>     
+    </>
   );
 }
 
