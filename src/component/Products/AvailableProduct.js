@@ -41,7 +41,7 @@ const AvailableProduct = () => {
       <h2>{item.title}</h2>
       <img src={item.imageUrl} alt="A Table" />
       <span>
-        `${item.price}`{" "}
+        `${item.price}`
         <Button
           onClick={addItemHandler.bind(null, item)}
           className="btn"
