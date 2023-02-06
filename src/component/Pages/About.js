@@ -1,11 +1,10 @@
-import Header from "../Layout/Header";
+
 import classes from "./about.module.css";
 import Aboutimage from "./images/Aboutimage.png";
 
 const AboutUs = () => {
   return (
     <div>
-        <Header/>
       <img className={classes.img} src={Aboutimage} alt="A table" />
       <p className={classes.p}>
         Lorem ipsum carrots enhanced rebates. Excellent sayings of a man of

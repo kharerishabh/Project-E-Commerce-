@@ -1,5 +1,5 @@
 import { Route } from "react-router-dom";
-import Header from "../Layout/Header";
+
 import classes from "./home.module.css";
 
 const Tours = [
@@ -47,7 +47,6 @@ const Home = () => {
   });
   return (
     <section>
-      <Header />
       <Route path="/">
       </Route>
       <h2 className={classes.h2}>Tours</h2>

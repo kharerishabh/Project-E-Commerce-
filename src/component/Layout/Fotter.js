@@ -1,16 +1,40 @@
-const Fotter = () => {
+import React from "react";
+import './Fotter.css'
+
+const Footer = (props) => {
   return (
-    <Fotter>
-      <nav>
-        <div>
-          <h1>The Generic</h1>
-        </div>
+    <footer>
+      <div className="footer-title">The Generics</div>
+      <div className="footer-icons">
         <ul>
-          <li></li>
+          <li>
+            <a href="https://www.youtube.com">
+              <img
+                src={"https://cdn-icons-png.flaticon.com/512/1384/1384060.png"}
+                alt=""
+              />
+            </a>
+          </li>
+          <li>
+            <a href="https://spotify.com">
+              <img
+                src={"https://cdn-icons-png.flaticon.com/128/49/49097.png"}
+                alt=""
+              />
+            </a>
+          </li>
+          <li>
+            <a href="https://facebook.com">
+              <img
+                src={"https://cdn-icons-png.flaticon.com/128/4494/4494475.png"}
+                alt=""
+              />
+            </a>
+          </li>
         </ul>
-      </nav>
-    </Fotter>
+      </div>
+    </footer>
   );
 };
 
-export default Fotter;
+export default Footer;
