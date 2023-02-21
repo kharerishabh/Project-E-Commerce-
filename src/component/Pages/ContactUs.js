@@ -12,10 +12,9 @@ const ContactUs = (props) => {
         const users = {
             name: nameRef.current.value,
             email: emailRef.current.value,
-            phoneNoref: phoneNoRef.current.value,
+            phoneNo: phoneNoRef.current.value,
           };
           props.onAddUser(users);
-          console.log(users)
           nameRef.current.value = "";
           emailRef.current.value = "";
           phoneNoRef.current.value = "";    
@@ -23,7 +22,7 @@ const ContactUs = (props) => {
     }
 
   return (
-    <form onSubmit={submitUsers}>
+    <form onSubmit={submitUsers} className={classes.form}>
       <div className={classes.control}>
         <label htmlFor="name">Name</label>
         <input type="text" id="name"  ref={nameRef}/>
@@ -36,7 +35,9 @@ const ContactUs = (props) => {
         <label htmlFor="phoneno">Phone No</label>
         <input type="number" id="phoneno"  ref={phoneNoRef}/>
       </div>
-      <button>Submit</button>
+      <div className={classes.btn}>
+      <button style={{backgroundColor: 'skyblue', color: 'black'}}>Submit</button>
+      </div>
     </form>
   );
 };

@@ -8,6 +8,9 @@ import Header from './component/Layout/Header';
 import Cart from './component/Cart/Cart'
 import CartProvider from "./component/store/CartProvider";
 import ContactUs from "./component/Pages/ContactUs";
+import ProductDetails from "./component/Pages/ProductDetails";
+import { ProductContextProvider } from "./component/store/product-context";
+
 
 const App = (props) => {
   const [cartIsShown, setCartIsShown] = useState(false);
@@ -38,6 +41,7 @@ const App = (props) => {
       <Header onShowCart={showCartHandler} />
       <main>
         <Switch>
+          <ProductContextProvider>
           <Route path="/" exact> 
             <Redirect to="/home"/>
           </Route>
@@ -50,9 +54,13 @@ const App = (props) => {
         <Route path="/contactus">
           <ContactUs onAddUser={submitHandler}/>
         </Route>
-        <Route path="/store">
+        <Route path="/store" exact>
           <Store />
         </Route>
+        <Route path="/store/:productId">
+          <ProductDetails/>
+        </Route>  
+        </ProductContextProvider>      
         </Switch>
       </main>
       <Fotter/>

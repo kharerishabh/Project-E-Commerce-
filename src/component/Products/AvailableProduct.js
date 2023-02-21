@@ -1,6 +1,8 @@
 import React, { useContext } from "react";
 import { Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import CartContext from "../store/cart-context";
+import ProductContext from "../store/product-context";
 import classes from "./Avaliable.module.css";
 
 const Product_Arr = [
@@ -30,16 +32,30 @@ const Product_Arr = [
   },
 ];
 
-const AvailableProduct = () => {
+const AvailableProduct = (props) => {
   const cartCtx = useContext(CartContext);
+  const productCtx = useContext(ProductContext);
+  console.log(productCtx)
+
   const addItemHandler = (item) => {
     cartCtx.addItems({ id: item.id, imageUrl: item.imageUrl, title: item.title, price: item.price, quantity: 1});
+  }
+ 
+  const ProductDetailHandler = (item) => {
+    const ProductDetail = {
+      title: item.title,
+      imageUrl: item.imageUrl,
+      price: item.price,
+      rating: 4.5,
+      detail: 'Best album of the year',
+    }
+    productCtx.changeDetail(ProductDetail)
   }
 
   const items = Product_Arr.map((item) => (
     <li key={item.id}>
       <h2>{item.title}</h2>
-      <img src={item.imageUrl} alt="A Table" />
+      <Link to="/store/:productId"><img src={item.imageUrl} alt="A Table" onClick={ProductDetailHandler.bind(null, item)} /></Link>
       <span>
         `${item.price}`
         <Button

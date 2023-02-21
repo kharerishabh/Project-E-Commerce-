@@ -33,8 +33,8 @@ const Tours = [
 const Home = () => {
   const items = Tours.map((item) => {
     return (
-      <ul>
-        <li  className={classes.li} key={Math.random().toString()}>
+      <ul key={Math.random().toString()}>
+        <li  className={classes.li} >
           <div className={classes.items}>
             <span className={classes.date}>{item.Date}</span>
             <span >{item.location}</span>

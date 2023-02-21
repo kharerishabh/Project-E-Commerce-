@@ -1,3 +1,9 @@
+.form {
+    margin: auto;
+    max-width: 500px;
+    border: 2px solid black;
+}
+
 .control {
   margin: 1rem 0;
 }
@@ -6,13 +12,14 @@
   display: block;
   font-weight: bold;
   margin-bottom: 0.5rem;
-  text-align: left;
+  text-align: center;
 }
 
 .control input,
 .control textarea {
   display: block;
   font: inherit;
+  width: 100%;
   padding: 0.2rem;
   border-radius: 12px;
   border: 1px solid #ccc;
@@ -22,4 +29,8 @@
 .control textarea:focus {
   outline: none;
   border-color: #230052;
+}
+
+.btn{
+    text-align: center;
 }
