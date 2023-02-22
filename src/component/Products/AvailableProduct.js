@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useRouteMatch } from "react-router-dom";
 import CartContext from "../store/cart-context";
 import ProductContext from "../store/product-context";
 import classes from "./Avaliable.module.css";
@@ -33,9 +33,11 @@ const Product_Arr = [
 ];
 
 const AvailableProduct = (props) => {
+  const match = useRouteMatch()
   const cartCtx = useContext(CartContext);
   const productCtx = useContext(ProductContext);
   console.log(productCtx)
+  console.log(match)
 
   const addItemHandler = (item) => {
     cartCtx.addItems({ id: item.id, imageUrl: item.imageUrl, title: item.title, price: item.price, quantity: 1});
