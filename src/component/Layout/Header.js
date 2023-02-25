@@ -2,9 +2,12 @@ import React, { Fragment, useContext, useEffect, useState } from "react";
 import { Navbar } from "react-bootstrap";
 import "./Header.css";
 import CartContext from "../store/cart-context";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useHistory, useLocation } from "react-router-dom";
+import AuthContext from "../store/auth-context";
 
 const Header = (props) => {
+  const history = useHistory()
+  const loginCtx = useContext(AuthContext)
   const [check, setCheck] = useState(false)
   const cartCtx = useContext(CartContext);
   const noOfCartItem = cartCtx.quantity;
@@ -18,7 +21,10 @@ const Header = (props) => {
     setCheck(false)
   }
   }, [location.pathname])
-
+  const logoutHandler = () =>{
+    loginCtx.logout()
+    history.replace('/login')
+  }
   return (
     <Fragment>
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -37,16 +43,24 @@ const Header = (props) => {
                 About Us
               </NavLink>
             </li>
+            {!loginCtx.isLoggedIn && <li className="nav-item">
+              <NavLink to="/login" className="nav-link">
+                Login
+              </NavLink>
+            </li>}
             <li className="nav-item">
               <NavLink to="/contactus" className="nav-link">
                 Contact Us
               </NavLink>
             </li>
-            <li className="nav-item">
+            {loginCtx.isLoggedIn && <li className="nav-item">
               <NavLink to="/store" className="nav-link">
                 Store
               </NavLink>
-            </li>
+            </li>}
+            {loginCtx.isLoggedIn && <li>
+              <button onClick={logoutHandler}>Logout</button>
+            </li>}
           </ul>
           {check && <form className="form-inline">
             <button

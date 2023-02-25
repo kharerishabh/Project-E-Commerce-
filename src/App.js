@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 import Fotter from "./component/Layout/Fotter";
 import AboutUs from "./component/Pages/About";
@@ -10,9 +10,12 @@ import CartProvider from "./component/store/CartProvider";
 import ContactUs from "./component/Pages/ContactUs";
 import ProductDetails from "./component/Pages/ProductDetails";
 import { ProductContextProvider } from "./component/store/product-context";
+import Login from "./component/auth/Login";
+import AuthContext from "./component/store/auth-context";
 
 
 const App = (props) => {
+  const loginCtx = useContext(AuthContext)
   const [cartIsShown, setCartIsShown] = useState(false);
 
   const showCartHandler = (event) => {
@@ -51,11 +54,15 @@ const App = (props) => {
         <Route path="/about">
           <AboutUs />
         </Route>
+        <Route path="/login">
+          <Login/>
+        </Route>
         <Route path="/contactus">
           <ContactUs onAddUser={submitHandler}/>
         </Route>
         <Route path="/store" exact>
-          <Store />
+          {loginCtx.isLoggedIn && <Store />}
+          {!loginCtx.isLoggedIn && <Redirect to='/login' />}
         </Route>
         <Route path="/store/:productId">
           <ProductDetails/>

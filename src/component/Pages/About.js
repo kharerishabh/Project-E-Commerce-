@@ -1,4 +1,3 @@
-
 import classes from "./about.module.css";
 import Aboutimage from "./images/Aboutimage.png";
 
