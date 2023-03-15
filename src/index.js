@@ -6,12 +6,15 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { AuthContextProvider } from './component/store/auth-context';
+import CartProvider from './component/store/CartProvider';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <AuthContextProvider>
     <BrowserRouter>
+    <CartProvider>
     <App />
+    </CartProvider>
     </BrowserRouter>  
     </AuthContextProvider>  
 );

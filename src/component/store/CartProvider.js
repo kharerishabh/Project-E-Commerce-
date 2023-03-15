@@ -1,79 +1,162 @@
-import React, {useReducer} from "react";
+import React, { useState } from "react";
 import CartContext from "./cart-context";
-const defaultCartState = {
-  items: [],
-  totalQuantity: 0,
-  totalPrice:0
-}
-const cartReducer = (state, action) => {
-  if(action.type === 'ADD') {
-    const updatedTotalPrice = state.totalPrice + action.item.price * action.item.quantity;
-    const existingCartItemIndex = state.items.findIndex(item => item.id === action.item.id);
-    const existingCartItem = state.items[existingCartItemIndex];
-    let updatedItems;
+// import axios from "axios";
+ 
 
-    if(existingCartItem) {
-      const updatedItem = {
-        ...existingCartItem,
-        quantity: existingCartItem.quantity + action.item.quantity,
-          price: existingCartItem.price + action.item.price
-      };
-      updatedItems = [...state.items];
-      updatedItems[existingCartItemIndex] = updatedItem
-    }else{
-      updatedItems = state.items.concat(action.item);
-    }
-    const updatedTotalQuantity = state.totalQuantity + 1;
-
-    return {
-      items: updatedItems,
-      totalQuantity: updatedTotalQuantity,
-       totalPrice: updatedTotalPrice
-    }
-  }
-  if(action.type === 'REMOVE'){
-    const existingCartItemIndex = state.items.findIndex(item => item.id === action.id);
-    const existingItem = state.items[existingCartItemIndex];
-    let updatedItems;
-    if(existingItem.quantity === 1) {
-      updatedItems = state.items.filter(item => item.id !== action.id)
-    }else {
-      const updatedItem = {...existingItem, quantity: existingItem.quantity - 1};
-      updatedItems = [...state.items];
-      updatedItems[existingCartItemIndex] = updatedItem;
-    }
-
-    const updatedTotalQuantity = state.totalQuantity - 1;
-    return {
-      items: updatedItems,
-      totalQuantity: updatedTotalQuantity,
-    }
-  }
-  return defaultCartState;
-}
 const CartProvider = (props) => {
-  const  [cartState, dispatchCartAction] = useReducer(cartReducer, defaultCartState);
-
-    const addItemToCartHandler = (item) => {
-      dispatchCartAction({type: 'ADD', item: item})
-    }
-
-    const removeItemFromCartHandler = (id) => {
-      dispatchCartAction({type: 'REMOVE', id: id })
-    }
-
-    const cartContext = {
-        items: cartState.items,
-        quantity: cartState.totalQuantity,
-        price: cartState.totalPrice,
-        addItems:  addItemToCartHandler ,
-        removeItem:  removeItemFromCartHandler ,
-      };
-      return (
-        <CartContext.Provider value={cartContext}>
-          {props.children}
-        </CartContext.Provider>
+  const [cartStates, setCartStates] = useState({
+    item: [],
+    totalAmount: 0,
+    totalQuantity: 0,
+  });
+  const email = localStorage.getItem("email");
+  const apiKey = `https://crudcrud.com/api/7c5b23fe7ef949598644dd3bc21949e9/cartData${email}`;
+  function getItemFormServer() {
+    const email = localStorage.getItem("email");
+    fetch(
+      `https://crudcrud.com/api/7c5b23fe7ef949598644dd3bc21949e9/cartData${email}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        console.log(data);
+        if (data.length >= 0) {
+          let refreshedItem = [];
+          let refreshedAmount = 0;
+          let refreshedQuantity = 0;
+          data.forEach((item) => {
+            refreshedItem.push(item);
+            refreshedQuantity = refreshedQuantity + 1;
+            refreshedAmount += item.price * item.quantity;
+          });
+          setCartStates({
+            item: refreshedItem,
+            totalAmount: refreshedAmount,
+            totalQuantity: refreshedQuantity,
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }
+  const addItemToCartHandler = (newItem) => {
+    let updatedItem = [...cartStates.item];
+    let updatedAmount = cartStates.totalAmount;
+    let updatedQuantity = cartStates.totalQuantity;
+    const addingItem = async () => {
+      updatedQuantity = updatedQuantity + 1;
+      updatedAmount = updatedAmount + newItem.price * newItem.quantity;
+      const cartItemIndex = cartStates.item.findIndex(
+        (item) => item.id === newItem.id
       );
-}
+      if (cartItemIndex === -1) {
+        try {
+          const res = await fetch(`${apiKey}`, {
+            method: "POST",
+            body: JSON.stringify({
+              id: newItem.id,
+              title: newItem.title,
+              price: newItem.price,
+              imageUrl: newItem.imageUrl,
+              quantity: newItem.quantity,
+            }),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+          const data = await res.json();
+          updatedItem = [...updatedItem, data];
+          setCartStates({
+            item: updatedItem,
+            totalAmount: updatedAmount,
+            totalQuantity: updatedQuantity,
+          });
+        } catch (err) {
+          console.log(err.message);
+        }
+      } else {
+        console.log(cartStates.item[cartItemIndex]._id);
+        const newQuantity = (cartStates.item[cartItemIndex].quantity += 1);
+        try {
+          console.log('PUT')
+          await fetch(`${apiKey}/${cartStates.item[cartItemIndex]._id}`, {
+            method: "PUT",
+            body: JSON.stringify({
+              title: newItem.title,
+              price: newItem.price,
+              imageUrl: newItem.imageUrl,
+              quantity: newQuantity,
+            }),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+          updatedItem[cartItemIndex].quantity = newQuantity;
+          setCartStates({
+            item: updatedItem,
+            totalAmount: updatedAmount,
+            totalQuantity: newQuantity,
+          });
+        } catch (err) {
+          console.log(err.message);
+        }
+      }
+    };
+    addingItem();
+    getItemFormServer();
+  };
+
+  const removeItemFromCartHandler = (newItem) => {
+    // let updatedItem = [...cartStates.item];
+    // let updatedAmount = cartStates.totalAmount;
+    // let updatedQuantity = cartStates.totalQuantity
+    const id = newItem._id;
+    const removingItem = async () => {
+      // console.log(id);
+      // const cartItemIndex = updatedItem.findIndex(
+      //   (item) => item.title === newItem.title
+      // );
+      // if(updatedItem[cartItemIndex].quantity >= 1){
+        console.log("DELETE")
+        try {
+          const res = await fetch(`${apiKey}/${id}`, {
+            method: "DELETE",
+          });
+          getItemFormServer();
+          // updatedAmount = updatedAmount - updatedItem[cartItemIndex].price;
+          // updatedItem = updatedItem.filter((item) => item.title !== newItem.title )
+          // updatedQuantity = updatedQuantity - 1;
+          // setCartStates({item: updatedItem, totalAmount: updatedAmount, totalQuantity: updatedQuantity})
+          console.log(res)
+        } catch (err) {
+          console.log(err);
+        }
+      //};
+      }
+    removingItem();
+  };
+
+  const cartContext = {
+    items: cartStates.item,
+    quantity: cartStates.totalQuantity,
+    totalPrice: cartStates.totalAmount,
+    addItems: addItemToCartHandler,
+    removeItem: removeItemFromCartHandler,
+    loginCartItem: getItemFormServer,
+    // getEmail: getEmail
+  };
+  return (
+    <CartContext.Provider value={cartContext}>
+      {props.children}
+    </CartContext.Provider>
+  );
+};
 
 export default CartProvider;

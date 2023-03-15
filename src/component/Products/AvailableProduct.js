@@ -1,7 +1,8 @@
 import React, { useContext } from "react";
 import { Button } from "react-bootstrap";
-import { Link, useRouteMatch } from "react-router-dom";
-import CartContext from "../store/cart-context";
+import { Link, useHistory } from "react-router-dom";
+import AuthContext from "../store/auth-context";
+ import CartContext from "../store/cart-context";
 import ProductContext from "../store/product-context";
 import classes from "./Avaliable.module.css";
 
@@ -33,14 +34,21 @@ const Product_Arr = [
 ];
 
 const AvailableProduct = (props) => {
-  const match = useRouteMatch()
-  const cartCtx = useContext(CartContext);
+  // const match = useRouteMatch()
+  const history = useHistory()
+  const authCtx = useContext(AuthContext)
+   const cartCtx = useContext(CartContext);
   const productCtx = useContext(ProductContext);
-  console.log(productCtx)
-  console.log(match)
+  // console.log(productCtx)
+  // console.log(match)
 
   const addItemHandler = (item) => {
-    cartCtx.addItems({ id: item.id, imageUrl: item.imageUrl, title: item.title, price: item.price, quantity: 1});
+    //cartCtx.addItem({ id: item.id, imageUrl: item.imageUrl, title: item.title, price: item.price, quantity: 1});
+     props.onAddToCart({...item, quantity: 1})
+     if(!authCtx.isLoggedIn){
+      history.replace('/login')
+     }
+    
   }
  
   const ProductDetailHandler = (item) => {
@@ -60,12 +68,13 @@ const AvailableProduct = (props) => {
       <Link to="/store/:productId"><img src={item.imageUrl} alt="A Table" onClick={ProductDetailHandler.bind(null, item)} /></Link>
       <span>
         `${item.price}`
-        <Button
-          onClick={addItemHandler.bind(null, item)}
+        {authCtx.isLoggedIn && <Button
+          onClick={() => addItemHandler(item)}
+
           className="btn"
         >
           Add To Cart
-        </Button>
+        </Button>}
       </span>
     </li>
   ));

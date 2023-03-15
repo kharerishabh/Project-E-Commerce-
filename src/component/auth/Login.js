@@ -1,9 +1,10 @@
-import React, { useContext, useRef } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
 import AuthContext from "../store/auth-context";
 import classes from "./Login.module.css";
 
 const Login = () => {
+  const [request, setRequest] = useState(false)
   const history = useHistory();
   const emailInputRef = useRef();
   const passwordInputRef = useRef();
@@ -13,7 +14,8 @@ const Login = () => {
     event.preventDefault();
     const enteredEmail = emailInputRef.current.value;
     const enteredPassword = passwordInputRef.current.value;
-
+    let email = enteredEmail.replace(/[^a-zA-Z0-9]/g, "");
+     
     let url =
       "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDomNmuB3TM9nmakqangAio_SW3dOnHseM";
 
@@ -29,8 +31,9 @@ const Login = () => {
       },
     })
       .then((res) => {
+        setRequest(false)
         if (res.ok) {
-          console.log(res);
+          // console.log(res);
           return res.json();
         } else {
           return res.json().then((data) => {
@@ -44,9 +47,10 @@ const Login = () => {
         }
       })
       .then((data) => {
-        loginCtx.login(data.idToken);
+        loginCtx.login(data.idToken, data.email);
+        localStorage.setItem("email", email)
         history.replace("/store");
-        console.log(data);
+        // console.log(data);
       })
       .catch((err) => {
         console.log(err.message);
@@ -71,9 +75,9 @@ const Login = () => {
           />
         </div>
         <div className={classes.actions}>
-          <button type="button" className={classes.toggle} onClick={submitHandler}>
+          {request ? <p>Request Sending...</p> : <button type="button" onClick={submitHandler}>
             Login
-          </button>
+          </button>}
         </div>
       </form>
     </section>

@@ -11,6 +11,7 @@ const Header = (props) => {
   const [check, setCheck] = useState(false)
   const cartCtx = useContext(CartContext);
   const noOfCartItem = cartCtx.quantity;
+  // console.log(noOfCartItem)
   const location = useLocation()
 
   useEffect(() => {
@@ -21,6 +22,7 @@ const Header = (props) => {
     setCheck(false)
   }
   }, [location.pathname])
+  
   const logoutHandler = () =>{
     loginCtx.logout()
     history.replace('/login')
@@ -53,24 +55,24 @@ const Header = (props) => {
                 Contact Us
               </NavLink>
             </li>
-            {loginCtx.isLoggedIn && <li className="nav-item">
+            <li className="nav-item">
               <NavLink to="/store" className="nav-link">
                 Store
               </NavLink>
-            </li>}
+            </li>
             {loginCtx.isLoggedIn && <li>
-              <button onClick={logoutHandler}>Logout</button>
+              <button onClick={logoutHandler} className="button">Logout</button>
             </li>}
           </ul>
           {check && <form className="form-inline">
-            <button
+            {loginCtx.isLoggedIn && <button
               className="btn btn-outline-success my-2 my-sm-0"
               style={{ alignItems: "center", paddingLeft: "-20%" }}
               type="submit"
               onClick={props.onShowCart}
             >
               Cart <span>{noOfCartItem}</span>
-            </button>
+            </button>}
           </form>}
         </div>
       </nav>

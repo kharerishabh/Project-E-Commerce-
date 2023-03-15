@@ -2,55 +2,61 @@ import { Route } from "react-router-dom";
 
 import classes from "./home.module.css";
 
-const Tours = [
-  {
-    Date: "JUL 16",
-    location: "DETROIT MI",
-    title: "DTE ENERGY MUSIC THEATRE",
-  },
-  {
-    Date: "JUL 19",
-    location: "TORONTO ON",
-    title: "BUDWEISER STAGE",
-  },
-  {
-    Date: "JUL 22",
-    location: "BRISTOW VA",
-    title: "JIGGY LUBE LIVE",
-  },
-  {
-    Date: "JUL 29",
-    location: "PHOENIX AZ",
-    title: "AK-CHIN PAVILION",
-  },
-  {
-    Date: "JUL 29",
-    location: "PHOENIX AZ",
-    title: "AK-CHIN PAVILION",
-  },
-];
-
 const Home = () => {
-  const items = Tours.map((item) => {
+  const tracks = [
+    {
+      id: "m1",
+      date: "JULY16",
+      title: "DETROIT, MI",
+      description: "DTE ENERGY MUSIC THEATRE",
+    },
+    {
+      id: "m2",
+      date: "JUL19",
+      title: "TORONTO,ON",
+      description: "BUDWEISER STAGE",
+    },
+    {
+      id: "m3",
+      date: "JUL 22",
+      title: "BRISTOW, VA",
+      description: "JIGGY LUBE LIVE",
+    },
+    {
+      id: "m4",
+      date: "JUL 29",
+      title: "PHOENIX, AZ",
+      description: "AK-CHIN PAVILION",
+    },
+    {
+      id: "m5",
+      date: "AUG 2",
+      title: "LAS VEGAS, NV",
+      description: "T-MOBILE ARENA",
+    },
+    {
+      id: "m6",
+      date: "AUG 7",
+      title: "CONCORD, CA",
+      description: "CONCORD PAVILION",
+    },
+  ];
+
+  const list = tracks.map((item) => {
     return (
-      <ul key={Math.random().toString()}>
-        <li  className={classes.li} >
-          <div className={classes.items}>
-            <span className={classes.date}>{item.Date}</span>
-            <span >{item.location}</span>
-            <span>{item.title}</span>
-            <button className={classes.button}>Buy Ticket</button>
-          </div>
-        </li>
-      </ul>
+      <li className={classes["tour-item"]} key={item.id}>
+        <span className={classes["tour-date"]}>{item.date}</span>
+        <span className={classes["tour-description"]}>{item.title}</span>
+        <span className={classes["tour-place"]}>{item.description}</span>
+        <button className={classes.button}>BUY TICKET</button>
+      </li>
     );
   });
+
   return (
-    <section>
-      <Route path="/">
-      </Route>
-      <h2 className={classes.h2}>Tours</h2>
-      <div>{items}</div>
+    <section className={classes.home}>
+      <h2>TOURS</h2>
+      <div className={classes.wrapper}>{list}</div>
     </section>
   );
 };

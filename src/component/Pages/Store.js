@@ -1,25 +1,26 @@
-import {  useContext } from "react";
+import { useContext, useEffect } from "react";
 import AvailableProduct from "../Products/AvailableProduct";
+import AuthContext from "../store/auth-context";
 import CartContext from "../store/cart-context";
 
-const Store = (props) => {
+const Store = () => {
   const cartCtx = useContext(CartContext);
+  const loginCtx = useContext(AuthContext);
 
-  const addToCartHAndler = () => {
-    console.log('hello')
-    cartCtx.addItems({
-      id: props.id,
-      title: props.title,
-      price: props.price,
-      imageUrl: props.imageUrl,
-    });
+  const login = loginCtx.isLoggedIn;
+  useEffect(() => {
+    if (login) {
+      cartCtx.loginCartItem();
+    }
+  }, [login]);
+  const addToCartHandler = (item) => {
+    // console.log("hello");
+    cartCtx.addItems(item);
   };
   return (
-      <main>
-        <AvailableProduct onAddToCart={addToCartHAndler} />
-      </main>
-    
+    <main>
+      <AvailableProduct onAddToCart={addToCartHandler} />
+    </main>
   );
 };
-
 export default Store;
